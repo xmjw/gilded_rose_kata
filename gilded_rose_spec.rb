@@ -8,7 +8,7 @@ describe "#update_quality" do
     Given(:initial_quality) { 10 }
     Given(:item) { Item.new(name, initial_sell_in, initial_quality) }
 
-    When { update_quality([item]) }
+    When { GildedRose.new([ item ]).update_quality }
 
     context "normal item" do
       Given(:name) { "NORMAL ITEM" }
@@ -206,7 +206,7 @@ describe "#update_quality" do
       ]
     }
 
-    When { update_quality(items) }
+    When { GildedRose.new(items).update_quality }
 
     Then { expect(items[0].quality).to eq 9 }
     Then { expect(items[0].sell_in).to eq 4 }
