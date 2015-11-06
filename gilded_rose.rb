@@ -14,44 +14,93 @@ class GildedRose
 
       case(item.name)
       when 'Aged Brie'
-        increment_quality(item)
-        increment_quality(item) if item.sell_in < 0
+        brie = AgedBrie.new(item.sell_in, item.quality)
+        item.quality = brie.new_quality
       when 'Backstage passes to a TAFKAL80ETC concert'
-        update_backstage_quality(item)
-        item.quality = 0 if item.sell_in < 0
+        pass = BackstagePass.new(item.sell_in, item.quality)
+        item.quality = pass.new_quality
       else
-        decrement_quality(item)
-        decrement_quality(item) if item.sell_in < 0
+        norm = NormalItem.new(item.sell_in, item.quality)
+        item.quality = norm.new_quality
       end
 
     end
   end
 
+end
+
+class NormalItem
+  def initialize(sell_in, quality)
+    @sell_in = sell_in
+    @quality = quality
+  end
+
+  def new_quality
+    decrement_quality
+    decrement_quality if @sell_in < 0
+    return @quality
+  end
+
   private
 
-  def increment_quality(item)
-    item.quality += 1 unless max_quality?(item)
+  def decrement_quality
+    @quality -= 1 unless @quality <= 0
   end
-
-  def decrement_quality(item)
-    item.quality -= 1 unless item.quality <= 0
-  end
-
-  def update_backstage_quality(item)
-    increment_quality(item)
-    if item.sell_in < 10
-      increment_quality(item)
-    end
-    if item.sell_in < 5
-      increment_quality(item)
-    end
-  end
-
-  def max_quality?(item)
-    item.quality >= 50
-  end
-
 end
+
+class BackstagePass
+  def initialize(sell_in, quality)
+    @sell_in = sell_in
+    @quality = quality
+  end
+
+  def new_quality
+    return 0 if @sell_in < 0
+
+    increment_quality
+    if @sell_in < 10
+      increment_quality
+    end
+    if @sell_in < 5
+      increment_quality
+    end
+    return @quality
+  end
+
+  private
+
+  def increment_quality
+    @quality += 1 unless max_quality?
+  end
+
+  def max_quality?
+    @quality >= 50
+  end
+end
+
+class AgedBrie
+  def initialize(sell_in, quality)
+    @sell_in = sell_in
+    @quality = quality
+  end
+
+  def new_quality
+    increment_quality
+    increment_quality if @sell_in < 0
+    return @quality
+  end
+
+  private
+
+  def increment_quality
+    @quality += 1 unless max_quality?
+  end
+
+  def max_quality?
+    @quality >= 50
+  end
+end
+
 
 # DO NOT CHANGE THINGS BELOW -----------------------------------------
 
