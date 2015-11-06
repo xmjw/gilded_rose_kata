@@ -10,7 +10,7 @@ describe "#update_quality" do
 
     When { GildedRose.new([ item ]).update_quality }
 
-    context "normal item" do
+    fcontext "normal item" do
       Given(:name) { "NORMAL ITEM" }
 
       Invariant { expect(item.sell_in).to eq initial_sell_in-1 }
