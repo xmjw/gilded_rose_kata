@@ -10,21 +10,13 @@ class GildedRose
         next
       end
 
-      if item.name != 'Aged Brie' && item.name != 'Backstage passes to a TAFKAL80ETC concert'
+      if item.name == 'Aged Brie'
+        increment_quality(item)
+      elsif item.name == 'Backstage passes to a TAFKAL80ETC concert'
+        update_backstage_quality(item)
+      else
         if item.quality > 0
           item.quality -= 1
-        end
-      else
-        if !max_quality?(item)
-          item.quality += 1
-          if item.name == 'Backstage passes to a TAFKAL80ETC concert'
-            if item.sell_in < 11
-              item.quality += 1
-            end
-            if item.sell_in < 6
-              item.quality += 1
-            end
-          end
         end
       end
 
@@ -35,9 +27,7 @@ class GildedRose
         when 'Backstage passes to a TAFKAL80ETC concert'
           item.quality = 0
         when "Aged Brie"
-          if !max_quality?(item)
-            item.quality += 1
-          end
+          increment_quality(item)
         else
           if item.quality > 0
             item.quality -= 1
@@ -48,6 +38,20 @@ class GildedRose
   end
 
   private
+
+  def increment_quality(item)
+    item.quality += 1 unless max_quality?(item)
+  end
+
+  def update_backstage_quality(item)
+    increment_quality(item)
+    if item.sell_in < 11
+      increment_quality(item)
+    end
+    if item.sell_in < 6
+      increment_quality(item)
+    end
+  end
 
   def max_quality?(item)
     item.quality >= 50
