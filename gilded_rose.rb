@@ -15,20 +15,12 @@ class GildedRose
       case(item.name)
       when 'Aged Brie'
         increment_quality(item)
+        increment_quality(item) if item.sell_in < 0
       when 'Backstage passes to a TAFKAL80ETC concert'
         update_backstage_quality(item)
+        item.quality = 0 if item.sell_in < 0
       else
         decrement_quality(item)
-      end
-
-
-
-      case(item.name)
-      when 'Backstage passes to a TAFKAL80ETC concert'
-        item.quality = 0 if item.sell_in < 0
-      when "Aged Brie"
-        increment_quality(item) if item.sell_in < 0
-      else
         decrement_quality(item) if item.sell_in < 0
       end
 
