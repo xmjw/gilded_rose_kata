@@ -6,27 +6,41 @@ class GildedRose
 
   def update_quality
     @items.each do |item|
-      if item.name == 'Sulfuras, Hand of Ragnaros'
-        next
-      end
-
-      item.sell_in -= 1
-
       case(item.name)
+      when 'Sulfuras, Hand of Ragnaros'
+        wow = WoWItem.new(item.sell_in, item.quality)
+        item.quality = wow.new_quality
+        item.sell_in = wow.new_sell_in
       when 'Aged Brie'
         brie = AgedBrie.new(item.sell_in, item.quality)
+        item.sell_in = brie.new_sell_in
         item.quality = brie.new_quality
       when 'Backstage passes to a TAFKAL80ETC concert'
         pass = BackstagePass.new(item.sell_in, item.quality)
+        item.sell_in = pass.new_sell_in
         item.quality = pass.new_quality
       else
         norm = NormalItem.new(item.sell_in, item.quality)
+        item.sell_in = norm.new_sell_in
         item.quality = norm.new_quality
       end
-
     end
   end
+end
 
+class WoWItem
+  def initialize(sell_in, quality)
+    @sell_in = sell_in
+    @quality = quality
+  end
+
+  def new_sell_in
+    return @sell_in
+  end
+
+  def new_quality
+    return @quality
+  end
 end
 
 class NormalItem
@@ -39,6 +53,11 @@ class NormalItem
     decrement_quality
     decrement_quality if @sell_in < 0
     return @quality
+  end
+
+  def new_sell_in
+    @sell_in -= 1
+    return @sell_in
   end
 
   private
@@ -67,6 +86,11 @@ class BackstagePass
     return @quality
   end
 
+  def new_sell_in
+    @sell_in -= 1
+    return @sell_in
+  end
+
   private
 
   def increment_quality
@@ -88,6 +112,11 @@ class AgedBrie
     increment_quality
     increment_quality if @sell_in < 0
     return @quality
+  end
+
+  def new_sell_in
+    @sell_in -= 1
+    return @sell_in
   end
 
   private
