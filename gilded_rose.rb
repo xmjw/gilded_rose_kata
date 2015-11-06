@@ -22,6 +22,8 @@ class GildedRose
       AgedBrie
     when 'Backstage passes to a TAFKAL80ETC concert'
       BackstagePass
+    when 'Conjured Mana Cake'
+      ConjuredItem
     else
       NormalItem
     end
@@ -42,6 +44,31 @@ class WoWItem
     return @quality
   end
 end
+
+class ConjuredItem
+  def initialize(sell_in, quality)
+    @sell_in = sell_in
+    @quality = quality
+  end
+
+  def new_quality
+    decrement_quality
+    decrement_quality if @sell_in < 0
+    return @quality
+  end
+
+  def new_sell_in
+    @sell_in -= 1
+    return @sell_in
+  end
+
+  private
+
+  def decrement_quality
+    @quality -= 2 unless @quality <= 0
+  end
+end
+
 
 class NormalItem
   def initialize(sell_in, quality)
