@@ -31,17 +31,16 @@ class GildedRose
       item.sell_in -= 1
 
       if item.sell_in < 0
-        if item.name != "Aged Brie"
-          if item.name != 'Backstage passes to a TAFKAL80ETC concert'
-            if item.quality > 0
-              item.quality -= 1
-            end
-          else
-            item.quality = 0
-          end
-        else
+        case(item.name)
+        when 'Backstage passes to a TAFKAL80ETC concert'
+          item.quality = 0
+        when "Aged Brie"
           if !max_quality?(item)
             item.quality += 1
+          end
+        else
+          if item.quality > 0
+            item.quality -= 1
           end
         end
       end
