@@ -6,24 +6,19 @@ class GildedRose
 
   def update_quality
     @items.each do |item|
-      case(item.name)
+      item_updater = case(item.name)
       when 'Sulfuras, Hand of Ragnaros'
-        wow = WoWItem.new(item.sell_in, item.quality)
-        item.quality = wow.new_quality
-        item.sell_in = wow.new_sell_in
+        WoWItem.new(item.sell_in, item.quality)
       when 'Aged Brie'
-        brie = AgedBrie.new(item.sell_in, item.quality)
-        item.sell_in = brie.new_sell_in
-        item.quality = brie.new_quality
+        AgedBrie.new(item.sell_in, item.quality)
       when 'Backstage passes to a TAFKAL80ETC concert'
-        pass = BackstagePass.new(item.sell_in, item.quality)
-        item.sell_in = pass.new_sell_in
-        item.quality = pass.new_quality
+        BackstagePass.new(item.sell_in, item.quality)
       else
-        norm = NormalItem.new(item.sell_in, item.quality)
-        item.sell_in = norm.new_sell_in
-        item.quality = norm.new_quality
+        NormalItem.new(item.sell_in, item.quality)
       end
+
+      item.sell_in = item_updater.new_sell_in
+      item.quality = item_updater.new_quality
     end
   end
 end
